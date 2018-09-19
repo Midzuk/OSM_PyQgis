@@ -1,3 +1,5 @@
+import os
+
 layer = iface.activeLayer()
 feats = layer.getFeatures()
 
@@ -35,6 +37,7 @@ for feat in feats:
         
         if link in links:
             print('error')
+            print(show(link))
         else:
             linkInfo = {}
             
@@ -73,7 +76,8 @@ for feat in feats:
         node1 = node2
         nodeId1 = nodeId2
         
-nodeFile = open('C:/Users/Mizuki/Desktop/output/output_nodes.csv', 'w')
+path = '/Users/uchidamizuki/Github/OSM_PyQgis/output/'
+nodeFile = open('%soutput_nodes.csv' % path, 'w')
 
 nodeFile.write('nodeId,x,y\n')
 for (x, y), nodeId in nodes.items():
@@ -81,7 +85,7 @@ for (x, y), nodeId in nodes.items():
 
 nodeFile.close()
 
-linkFile = open('C:/Users/Mizuki/Desktop/output/output_links.csv', 'w')
+linkFile = open('%soutput_links.csv' % path, 'w')
 linkFile.write('nodeIdOrg,nodeIdDest,distance,highway,oneway,bridge,width\n')
 for (nodeId1, nodeId2), linkInfo in links.items():
     dist = linkInfo['distance']
@@ -92,33 +96,3 @@ for (nodeId1, nodeId2), linkInfo in links.items():
     linkFile.write('%d,%d,%f,%s,%s,%s,%s\n' % (nodeId1, nodeId2, dist, highway, oneway, bridge, width))
 
 linkFile.close()
-#verts = []
-#intersects = []
-#for feat in feats:
-#    geom = feat.geometry()
-#    vertIter = geom.vertices()
-#    while vertIter.hasNext():
-#        vert = vertIter.next()
-#        if vert in intersects:
-#            pass
-#        elif vert in verts:
-#            intersects.append(vert)
-#        else:
-#            verts.append(vert)
-
-
-
-#ptLayer = QgsVectorLayer(layer.source(), 'point', layer.providerType())
-#prov = ptLayer.dataProvider()
-#ptLayer.startEditing()
-#prov.truncate()
-#for intersect in intersects:
-#    feat = QgsFeature()
-#    geom = QgsGeometry.fromPointXY(QgsPointXY(intersect.x(), intersect.y()))
-#    feat.setGeometry(geom)
-#    prov.addFeatures([feat])
-#
-#ptLayer.commitChanges()
- 
-# Add the layer to the Layers panel
-#QgsProject.instance().addMapLayer(ptLayer)
