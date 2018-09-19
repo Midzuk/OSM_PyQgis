@@ -1,5 +1,3 @@
-import os
-
 layer = iface.activeLayer()
 feats = layer.getFeatures()
 
