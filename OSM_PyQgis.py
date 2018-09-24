@@ -1,3 +1,4 @@
+#保存したいフォルダのパスを指定 ('\'を'/'に変換)
 path = 'C:/Users/Mizuki/Documents/GitHub/OSM_PyQgis/output/'
 
 layer = iface.activeLayer()
