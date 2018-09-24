@@ -1,3 +1,5 @@
+path = 'C:/Users/Mizuki/Documents/GitHub/OSM_PyQgis/output/'
+
 layer = iface.activeLayer()
 feats = layer.getFeatures()
 
@@ -35,7 +37,6 @@ for feat in feats:
         
         if link in links:
             print('error')
-            print(show(link))
         else:
             linkInfo = {}
             
@@ -74,7 +75,6 @@ for feat in feats:
         node1 = node2
         nodeId1 = nodeId2
         
-path = '/Users/uchidamizuki/Github/OSM_PyQgis/output/'
 nodeFile = open('%soutput_nodes.csv' % path, 'w')
 
 nodeFile.write('nodeId,x,y\n')
