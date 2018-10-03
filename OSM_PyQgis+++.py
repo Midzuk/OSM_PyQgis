@@ -1,10 +1,10 @@
-﻿path = 'C:/Users/tk46/Documents/GIS/output/'
+path = 'C:/Users/tk46/Documents/GIS/output/'
 region = 'tohoku'
 
-nodeFile = open('%s%soutput_nodes.csv' % (path, region), 'w', encoding='utf-8_sig')
-nodeFile.write('nodeId,x,y\n')
+nodeFile = open('%s%soutput_nodes.csv' % (path, region), 'w')
+nodeFile.write('nodeId,x,y,layer\n')
 
-linkFile = open('%s%soutput_links.csv' % (path, region), 'w', encoding='utf-8_sig')
+linkFile = open('%s%soutput_links.csv' % (path, region), 'w')
 linkFile.write('nodeIdOrg,nodeIdDest,distance,highway,oneway,bridge,tunnel\n')
 
 l = iface.activeLayer()
@@ -14,13 +14,18 @@ nodes = {}
 nodeIdCount = 0
 links = []
 
+da = QgsDistanceArea()
+da.setEllipsoid('WGS84')
+
 for feat in feats:
     geom = feat.geometry()
     vertIter = geom.vertices()
     
-    #ノード
+    layer = feat['layer']
+    
+    #add nodes
     vert1 = vertIter.next()
-    node1 = (vert1.x(), vert1.y(), feat['layer'])
+    node1 = (vert1.x(), vert1.y(), layer)
     
     if node1 in nodes:
         nodeId1 = nodes[node1]
@@ -29,11 +34,11 @@ for feat in feats:
         nodeId1 = nodeIdCount
         nodeIdCount += 1
         
-        nodeFile.write('%d,%f,%f\n' % (nodeId1, vert1.x(), vert1.y()))
+        nodeFile.write('%d,%f,%f,%i\n' % (nodeId1, vert1.x(), vert1.y(), layer))
     
     while vertIter.hasNext():
         vert2 = vertIter.next()
-        node2 = (vert2.x(), vert2.y(), feat['layer'])
+        node2 = (vert2.x(), vert2.y(), layer)
         
         if node2 in nodes:
             nodeId2 = nodes[node2]
@@ -42,16 +47,12 @@ for feat in feats:
             nodeId2 = nodeIdCount
             nodeIdCount += 1
             
-            nodeFile.write('%d,%f,%f\n' % (nodeId2, vert2.x(), vert2.y()))
+            nodeFile.write('%d,%f,%f,%i\n' % (nodeId2, vert2.x(), vert2.y(), layer))
         
-        #リンクの追加
+        #add links
         link = (nodeId1, nodeId2)
         
         if link not in links:
-            linkInfo = {}
-            
-            da = QgsDistanceArea()
-            da.setEllipsoid('WGS84')
             pt1 = QgsPointXY(node1[0], node1[1])
             pt2 = QgsPointXY(node2[0], node2[1])
             
